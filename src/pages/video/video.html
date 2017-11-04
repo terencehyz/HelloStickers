@@ -1,0 +1,30 @@
+<!--
+  Generated template for the VideoPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>表情包视频</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only color="dark" (click)="savePhoto()">
+        <ion-icon name="download"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-card class="ion-card">
+    <img class="ion-card-img" src="assets/imgs/initialize.jpg"/>
+  </ion-card>
+  <button id="button1" ion-button color="secondary" round small>生成</button>
+  <ion-item class="ion-item" no-lines>
+    <ion-label color="primary" stacked>提示：上传视频生成专属表情包视频！</ion-label>
+  </ion-item>
+  <button class="button2" ion-button color="secondary" full no-margin>选择上传</button>
+</ion-content>
