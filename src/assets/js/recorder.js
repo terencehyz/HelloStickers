@@ -100,7 +100,8 @@ var Recorder = exports.Recorder = (function () {
             };
 
             function init(config) {
-                sampleRate = config.sampleRate;
+                //sampleRate = config.sampleRate;
+                sampleRate = 16000;
                 numChannels = config.numChannels;
                 initBuffers();
             }
@@ -188,6 +189,7 @@ var Recorder = exports.Recorder = (function () {
             }
 
             function encodeWAV(samples) {
+                console.log("~~~~~~~~~~~~~sampleRate~~~~~~~~~~~~~~~~: "+sampleRate.toString());
                 var buffer = new ArrayBuffer(44 + samples.length * 2);
                 var view = new DataView(buffer);
 
