@@ -3,8 +3,10 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AlertController, LoadingController,ActionSheetController } from 'ionic-angular';
 import { Http } from "@angular/http";
 import { MediaObject } from "@ionic-native/media";
-import { RecorderProvider } from "../../providers/recorder/recorder";
 import { PhotoLibrary } from '@ionic-native/photo-library';
+import jQuery from "jquery";
+
+declare var Recorder: any;
 /**
  * Generated class for the AudioPage page.
  *
@@ -18,39 +20,85 @@ declare var cordova: any;
   templateUrl: 'audio.html',
 })
 export class AudioPage {
-  recMediaList: MediaObject[];
+  //recMediaList: MediaObject[];
   recorded: boolean;
   AudioUrl: String;
   loading;
   defaultImg;
   isClicked:boolean;
+  //private Recorder: any;
+  public recorder: any;
+  private audio_context: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public http: Http, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public actionSheetCtrl:ActionSheetController, public recorder: RecorderProvider) {
-    this.recMediaList = this.recorder.mediaList;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public http: Http, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public actionSheetCtrl:ActionSheetController) {
+    //this.recorder = dcodeIO.Recorder;
+    //this.recMediaList = this.recorder.mediaList;
     this.recorded = false;
     this.isClicked = false;
     this.defaultImg = "https://ws1.sinaimg.cn/large/77ce63b1ly1fl652p73krj205k05kzk6.jpg";
   }
 
+  ngOnInit(): void {
+    try {
+        this.audio_context = new AudioContext;
+        console.log('Audio context set up');
+        console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+      } catch (e) {
+        alert('No web audio support in this browser!');
+      }
+
+      navigator.getUserMedia({audio: true}, (stream)=>{
+                                var input = this.audio_context.createMediaStreamSource(stream);
+                                console.log('Media stream created.');
+                                this.recorder = new Recorder(input);
+                                console.log('Recorder initialised.');},
+                             function(e) {
+                                console.log('No live audio input: ' + e);
+                              });
+  }
+
   startRecording(){
-    this.recorder.onStartRecord();
+    this.recorder && this.recorder.record();
+    console.log('Recording...');
   }
 
   stopRecording(){
-    this.recorder.onStopRecord();
-    this.recMediaList = this.recorder.mediaList;
+    this.recorder && this.recorder.stop();
+    console.log('Stopped recording.');
+    this.recorder && this.recorder.exportWAV(function(blob) {
+    var data = new FormData();
+    var name = new Date().getTime().toString() + '.wav'
+    data.append('key',name);
+    data.append('file',blob);
+    jQuery.ajax({
+      type: "POST",
+      url: "http://stickers-audio.sh1a.qingstor.com",
+      data: data,
+      processData: false,
+      contentType: false,
+      cache: false,
+      timeout: 600000,
+      success: function (data) {
+          console.log("SUCCESS : ", data);
+      },
+      error: function (e) {
+        console.log("ERROR");
+      }
+    });
+    });
+    this.recorder.clear();
   }
 
   play(){
-    this.recorder.onPlay();
+    //this.recorder.onPlay();
   }
 
   pause(){
-    this.recorder.onPause();
+    //this.recorder.onPause();
   }
 
   stop(){
-    this.recorder.onStop();
+    //this.recorder.onStop();
   }
 
   record(){
