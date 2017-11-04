@@ -22,20 +22,25 @@ export class RecorderProvider {
   }
 
   onStartRecord(){
-    this.mediaList == null ? this.mediaList[0].release():[];
+    if(this.mediaList == null){
+      this.mediaList[0].release();
+    }
+    else {
+      this.mediaList=[];
+    }
     this.media.startRecord();
   }
 
   onStopRecord(){
     this.media.stopRecord();
     this.mediaList.push(this.media);
-    this.media.getCurrentPosition().then((position)=>{
-      alert(position);
-    })
   }
 
   onPlay(){
     this.mediaList[0].play();
+    this.mediaList[0].getCurrentPosition().then((position)=>{
+      alert(position);
+    })
   }
 
   onPause(){
