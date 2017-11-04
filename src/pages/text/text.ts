@@ -94,15 +94,15 @@ export class TextPage {
       alert("还没有填写文字");
       return;
     }
-    let url = '';
+    let url = 'http://192.168.50.196:8081/reigister1?text='+this.myText;
     this.loading = this.loadingCtrl.create({
       content: '生成专属表情中'
     });
     this.loading.present();
-    this.http.post(url, {text:this.myText}).subscribe((res)=>{
+    this.http.get(url).subscribe((res)=>{
       this.loading.dismiss();
-      if(res.json().sucess){
-        this.defaultImg = res.json().data.url;
+      if(res.json().success){
+        this.defaultImg = res.json().data;
       }else {
         alert("请重试");
       }
