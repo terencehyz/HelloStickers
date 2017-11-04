@@ -13,7 +13,6 @@ import { HomePage } from '../pages/home/home';
 import { AudioPage } from "../pages/audio/audio";
 import { TextPage } from "../pages/text/text";
 import { VideoPage } from "../pages/video/video";
-import { RecorderProvider } from '../providers/recorder/recorder';
 
 @NgModule({
   declarations: [
@@ -40,8 +39,7 @@ import { RecorderProvider } from '../providers/recorder/recorder';
     StatusBar,
     SplashScreen,
     Media,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    RecorderProvider
+    {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
 export class AppModule {}

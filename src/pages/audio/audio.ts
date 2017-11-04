@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AlertController, LoadingController,ActionSheetController } from 'ionic-angular';
 import { Http } from "@angular/http";
 import { MediaObject } from "@ionic-native/media";
-import { RecorderProvider } from "../../providers/recorder/recorder";
 import { PhotoLibrary } from '@ionic-native/photo-library';
 import jQuery from "jquery";
 
