@@ -1,14 +1,12 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-navbar>
-</ion-header>
+<ion-content class="card-background-page" overflow-scroll="true">
+  <img src="assets/imgs/bg.jpg"/>
+  <ion-fab bottom right>
+    <button ion-fab color="secondary"><ion-icon name="arrow-dropup"></ion-icon></button>
+    <ion-fab-list side="top">
+      <button ion-fab (click)="navToText()"><ion-icon name="create"></ion-icon></button>
+      <button ion-fab (click)="navToAudio()"><ion-icon name="pulse"></ion-icon></button>
+      <button ion-fab (click)="navToVideo()"><ion-icon name="outlet"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
 </ion-content>
