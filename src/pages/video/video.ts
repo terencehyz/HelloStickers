@@ -2,24 +2,31 @@ import {AfterViewInit, Component, Directive, ViewChild} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import jQuery from "jquery";
 import * as RecordRTC from 'recordrtc';
+import { Http } from "@angular/http";
+import { LoadingController } from "ionic-angular";
+
 /**
  * Generated class for the VideoPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
-
+var that: any;
 @IonicPage()
 @Component({
   selector: 'page-video',
   templateUrl: 'video.html',
 })
+
 export class VideoPage {
 
 	// /@ViewChild(Pane) video: any
 	private stream: any;
 	private recordRTC: any;
 	private controls: boolean;
+	videoUrl: String;
+  loading;
+  defaultImg;
 
 	ngAfterViewInit() {
 	    // set the initial state of the video
@@ -81,6 +88,13 @@ export class VideoPage {
 	}
 
 	processVideo(audioVideoWebMURL) {
+	  that = this;
+    this.loading = this.loadingCtrl.create({
+      content: '正在生成专属表情'
+    });
+    this.loading.present();
+    var name = new Date().getTime().toString() + '.webm';
+    this.videoUrl = name;
 		//let video: HTMLVideoElement = this.video.nativeElement;
 		let recordRTC = this.recordRTC;
 		//video.src = audioVideoWebMURL;
@@ -88,7 +102,6 @@ export class VideoPage {
 		var recordedBlob = recordRTC.getBlob();
 		//recordRTC.getDataURL(function (dataURL) { console.log(dataURL); });
 		var data = new FormData();
-	    var name = new Date().getTime().toString() + '.webm'
 	    data.append('key',name);
 	    data.append('file',recordedBlob);
 	    jQuery.ajax({
@@ -101,6 +114,7 @@ export class VideoPage {
 	      timeout: 600000,
 	      success: function (data) {
 	          console.log("SUCCESS : ", data);
+	          that.submit();
 	      },
 	      error: function (e) {
 	        console.log("ERROR");
@@ -108,11 +122,24 @@ export class VideoPage {
 	    });
 	}
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+  constructor(public navCtrl: NavController, public navParams: NavParams, public http: Http, public loadingCtrl: LoadingController) {
+	  this.defaultImg = "https://ws1.sinaimg.cn/large/77ce63b1gy1fl6vj6moa5j20dw0dw0tc.jpg";
+	}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VideoPage');
   }
 
+  submit(){
+    let url = 'http://192.168.50.196:8081/reigister3?videoUrl='+"http://stickers-video.sh1a.qingstor.com/"+this.videoUrl;
+    this.http.get(url).subscribe((res)=>{
+      this.loading.dismiss();
+      if(res.json().success){
+        this.defaultImg = res.json().data;
+      }
+      else {
+        alert("请重试~");
+      }
+    })
+  }
 }

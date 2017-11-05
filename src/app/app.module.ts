@@ -13,6 +13,7 @@ import { HomePage } from '../pages/home/home';
 import { AudioPage } from "../pages/audio/audio";
 import { TextPage } from "../pages/text/text";
 import { VideoPage } from "../pages/video/video";
+import { MyPicProvider } from '../providers/my-pic/my-pic';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { VideoPage } from "../pages/video/video";
     StatusBar,
     SplashScreen,
     Media,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    MyPicProvider
   ]
 })
 export class AppModule {}

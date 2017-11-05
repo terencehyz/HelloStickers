@@ -8,11 +8,6 @@
 
   <ion-navbar>
     <ion-title>表情包视频</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only color="dark" (click)="savePhoto()">
-        <ion-icon name="download"></ion-icon>
-      </button>
-    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -20,11 +15,13 @@
 
 <ion-content padding>
   <ion-card class="ion-card">
-    <img class="ion-card-img" src="assets/imgs/initialize.jpg"/>
+    <img class="ion-card-img" [src]="defaultImg"/>
   </ion-card>
-  <button id="button1" ion-button color="secondary" round small>生成</button>
+  <!--<button id="button1" ion-button color="secondary" round small>生成</button>-->
   <ion-item class="ion-item" no-lines>
     <ion-label color="primary" stacked>提示：上传视频生成专属表情包视频！</ion-label>
   </ion-item>
-  <button class="button2" ion-button color="secondary" full no-margin (click)="videoRecording()">开始拍摄</button>
+  <button class="button2" ion-button color="secondary" full no-margin (click)="videoRecording()" *ngIf="controls">开始拍摄</button>
+  <button class="button2" ion-button color="danger" full no-margin (click)="videoRecording()" *ngIf="!controls">结束拍摄</button>
+
 </ion-content>
