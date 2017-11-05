@@ -3,6 +3,7 @@ import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {AlertController, LoadingController, ActionSheetController} from 'ionic-angular';
 import {Http} from "@angular/http";
 import jQuery from "jquery";
+import * as resampler from "audio-resampler";
 
 declare var Recorder: any;
 var that: any;
@@ -72,27 +73,38 @@ export class AudioPage {
     });
     this.loading.present();
     this.recorder && this.recorder.exportWAV(function (blob) {
-      var data = new FormData();
-      data.append('key', name);
-      data.append('file', blob);
-      jQuery.ajax({
-        type: "POST",
-        url: "http://stickers-audio.sh1a.qingstor.com",
-        data: data,
-        processData: false,
-        contentType: false,
-        cache: false,
-        timeout: 2000,
-        success: function (data) {
-          console.log("SUCCESS : ", data);
-          that.submit();
-        },
-        error: function (e) {
-          console.log("ERROR");
-        }
+      var url = URL.createObjectURL(blob);
+      resampler(url, 16000, function (event) {
+        event.getFile(function (fileEvent) {
+          console.log("Finish downsampling!");
+          fetch(fileEvent)
+            .then(res => res.blob())
+            .then(blob => {
+              var data = new FormData();
+              var name = new Date().getTime().toString() + '.wav'
+              data.append('key', name);
+              data.append('file', blob);
+              jQuery.ajax({
+                type: "POST",
+                url: "http://stickers-audio.sh1a.qingstor.com",
+                data: data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                success: function (data) {
+                  console.log("SUCCESS : ", data);
+                },
+                error: function (e) {
+                  console.log("ERROR");
+                }
+              });
+            });
+        });
+
       });
+      this.recorder.clear();
     });
-    this.recorder.clear();
   }
 
   record() {
@@ -178,6 +190,4 @@ export class AudioPage {
       }
     })
   }
-
-
 }

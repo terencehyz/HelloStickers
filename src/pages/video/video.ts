@@ -45,8 +45,8 @@ export class VideoPage {
 	startRecording() {
 	    let mediaConstraints = {
 	      video: {
-	          Width: {min: 1280},
-	          height: {min: 720}
+	          Width: {min: 720, ideal:1280, max:1920},
+	          height: {min: 720, ideal:1280, max:1920}
 	      }, audio: true
 	    };
 	    navigator.mediaDevices
