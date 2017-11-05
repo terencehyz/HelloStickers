@@ -81,7 +81,6 @@ export class AudioPage {
             .then(res => res.blob())
             .then(blob => {
               var data = new FormData();
-              var name = new Date().getTime().toString() + '.wav'
               data.append('key', name);
               data.append('file', blob);
               jQuery.ajax({
@@ -94,6 +93,7 @@ export class AudioPage {
                 timeout: 600000,
                 success: function (data) {
                   console.log("SUCCESS : ", data);
+                  that.submit();
                 },
                 error: function (e) {
                   console.log("ERROR");
@@ -103,8 +103,8 @@ export class AudioPage {
         });
 
       });
-      this.recorder.clear();
     });
+    this.recorder.clear();
   }
 
   record() {
