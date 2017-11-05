@@ -100,8 +100,8 @@ var Recorder = exports.Recorder = (function () {
             };
 
             function init(config) {
-                //sampleRate = config.sampleRate;
-                sampleRate = 16000;
+                sampleRate = config.sampleRate;
+                //sampleRate = 16000;
                 numChannels = config.numChannels;
                 initBuffers();
             }

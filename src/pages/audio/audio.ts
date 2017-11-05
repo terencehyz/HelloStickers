@@ -5,6 +5,7 @@ import { Http } from "@angular/http";
 import { MediaObject } from "@ionic-native/media";
 import { PhotoLibrary } from '@ionic-native/photo-library';
 import jQuery from "jquery";
+import * as resampler from "audio-resampler";
 
 declare var Recorder: any;
 /**
@@ -66,25 +67,42 @@ export class AudioPage {
     this.recorder && this.recorder.stop();
     console.log('Stopped recording.');
     this.recorder && this.recorder.exportWAV(function(blob) {
-    var data = new FormData();
-    var name = new Date().getTime().toString() + '.wav'
-    data.append('key',name);
-    data.append('file',blob);
-    jQuery.ajax({
-      type: "POST",
-      url: "http://stickers-audio.sh1a.qingstor.com",
-      data: data,
-      processData: false,
-      contentType: false,
-      cache: false,
-      timeout: 600000,
-      success: function (data) {
-          console.log("SUCCESS : ", data);
-      },
-      error: function (e) {
-        console.log("ERROR");
-      }
-    });
+    var url = URL.createObjectURL(blob);
+    resampler(url, 16000, function(event){
+        event.getFile(function(fileEvent){
+          console.log("Finish downsampling!");
+          fetch(fileEvent)
+              .then(res => res.blob())
+              .then(blob => {
+                var data = new FormData();
+                var name = new Date().getTime().toString() + '.wav'
+                data.append('key',name);
+                data.append('file',blob);
+                jQuery.ajax({
+                  type: "POST",
+                  url: "http://stickers-audio.sh1a.qingstor.com",
+                  data: data,
+                  processData: false,
+                  contentType: false,
+                  cache: false,
+                  timeout: 600000,
+                  success: function (data) {
+                      console.log("SUCCESS : ", data);
+                  },
+                  error: function (e) {
+                    console.log("ERROR");
+                  }
+                });
+                });
+            });
+/*            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.download = "resampled.wav";
+            a.href = fileEvent;
+            a.click();
+            window.URL.revokeObjectURL(fileEvent);
+            document.body.removeChild(a);*/
+        });
     });
     this.recorder.clear();
   }
